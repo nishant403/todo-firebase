@@ -19,6 +19,14 @@ const getAll = async () => {
   return snapshot.val();
 };
 
+const getDBAll = () => {
+  return db;
+}
+
+const getDB = key => {
+  return db.child(key);
+}
+
 const remove = key => {
   return db.child(key).remove();
 };
@@ -27,5 +35,5 @@ const removeAll = () => {
   return db.remove();
 };
 
-const utils = { set, update, get, getAll, remove, removeAll };
+const utils = { set, update, get, getAll,getDB,getDBAll, remove, removeAll };
 export default utils;
