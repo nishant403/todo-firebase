@@ -1,4 +1,5 @@
 import firebase from "./firebase";
+
 const db = firebase.ref("myList");
 
 const set = (key, data) => {
@@ -19,13 +20,13 @@ const getAll = async () => {
   return snapshot.val();
 };
 
-const getDBAll = () => {
-  return db;
-}
-
-const getDB = key => {
+const getRef = key => {
   return db.child(key);
-}
+};
+
+const getRefAll = () => {
+  return db;
+};
 
 const remove = key => {
   return db.child(key).remove();
@@ -35,5 +36,14 @@ const removeAll = () => {
   return db.remove();
 };
 
-const utils = { set, update, get, getAll,getDB,getDBAll, remove, removeAll };
+const utils = {
+  set,
+  update,
+  get,
+  getAll,
+  getRef,
+  getRefAll,
+  remove,
+  removeAll
+};
 export default utils;

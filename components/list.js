@@ -6,9 +6,8 @@ function List() {
   const [toDoList, setToDoList] = useState([]);
 
   useEffect(() => {
-    const items = utils.getDBAll();
+    const items = utils.getRefAll();
     items.on("value", snapshot => {
-
       let items = snapshot.val();
       let newList = [];
 
@@ -19,7 +18,6 @@ function List() {
       }
 
       setToDoList(newList);
-
     });
   }, []);
 

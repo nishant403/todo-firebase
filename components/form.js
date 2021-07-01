@@ -10,16 +10,14 @@ function Form() {
 
   const addToDo = () => {
     const newToDo = {
-      title: title,
-      completed: false
+      title: title
     };
 
-    utils.get("counter").then((item) => {
+    utils.get("counter").then(item => {
       const index = item["value"];
-      console.log(index);
       utils.set(index.toString(), newToDo).then(() => {
         utils.set("counter", {
-          value : index + 1
+          value: index + 1
         });
       });
     });
