@@ -1,49 +1,76 @@
 import firebase from "./firebase";
+import React, { useState, useEffect } from "react";
 
 const db = firebase.ref("myList");
 
-const set = (key, data) => {
-  return db.child(key).set(data);
-};
+const DBContext = React.createContext();
 
-const update = (key, data) => {
-  return db.child(key).update(data);
-};
+function DBProvider(props) {
+  const [loaded, setLoaded] = useState(false);
+  const [storage, setStorage] = useState({});
 
-const get = async key => {
-  const snapshot = await db.child(key).once("value");
-  return snapshot.val();
-};
+  useEffect(() => {
+    db.once("value", function(snapshot) {
+      setStorage(snapshot.val());
+      setLoaded(true);
+    });
+  }, []);
 
-const getAll = async () => {
-  const snapshot = await db.once("value");
-  return snapshot.val();
-};
+  function set(key, data) {
+    if (storage.hasOwnProperty(key) == true) {
+      return remove(key, data).then(() => {
+        let storageCopy = Object.assign({}, storage);
+        storageCopy[key] = data;
+        setStorage(storageCopy);
 
-const getRef = key => {
-  return db.child(key);
-};
+        return db.child(key).set(data);
+      });
+    }
 
-const getRefAll = () => {
-  return db;
-};
+    let storageCopy = Object.assign({}, storage);
+    storageCopy[key] = data;
+    setStorage(storageCopy);
 
-const remove = key => {
-  return db.child(key).remove();
-};
+    return db.child(key).set(data);
+  }
 
-const removeAll = () => {
-  return db.remove();
-};
+  function update(key, data) {
+    if (storage.hasOwnProperty(key) == false) {
+      return set(key, data);
+    }
 
-const utils = {
-  set,
-  update,
-  get,
-  getAll,
-  getRef,
-  getRefAll,
-  remove,
-  removeAll
-};
-export default utils;
+    let storageCopy = Object.assign({}, storage);
+
+    for (let subkey in data) {
+      storageCopy[key][subkey] = data[subkey];
+    }
+
+    setStorage(storageCopy);
+
+    return db.child(key).update(data);
+  }
+
+  function get(key) {
+    if (storage.hasOwnProperty(key)) {
+      return storage[key];
+    }
+  }
+
+  function remove(key) {
+    if (storage.hasOwnProperty(key)) {
+      let storageCopy = Object.assign({}, storage);
+      delete storageCopy[key];
+      setStorage(storageCopy);
+
+      return db.child(key).remove();
+    }
+  }
+
+  return (
+    <DBContext.Provider value={{ get, set, remove, update }}>
+      {loaded ? props.children : <p>Loading</p>}
+    </DBContext.Provider>
+  );
+}
+
+export { DBContext, DBProvider };

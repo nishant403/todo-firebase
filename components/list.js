@@ -1,33 +1,20 @@
-import React, { useEffect, useState } from "react";
-import ToDo from "./todo";
-import utils from "../utils/dbStorage";
+import React, { useContext, useState, useMemo } from "react";
+import { DBContext } from "../utils/dbStorage";
 
 function List() {
-  const [toDoList, setToDoList] = useState([]);
+  const context = useContext(DBContext);
+  const counter = context.get("counter") ? context.get("counter").value : "";
 
-  useEffect(() => {
-    const items = utils.getRefAll();
-    items.on("value", snapshot => {
-      let items = snapshot.val();
-      let newList = [];
+  return useMemo(() => {
+    for (let i = 0; i <= 10000000; i++) {}
 
-      for (let item in items) {
-        if (item != "counter") {
-          newList.push(items[item]);
-        }
-      }
-
-      setToDoList(newList);
-    });
-  }, []);
-
-  return (
-    <div>
-      {toDoList.map((item, index) => (
-        <ToDo todo={item} key={index} />
-      ))}
-    </div>
-  );
+    return (
+      <div>
+        <h2>List</h2>
+        <p>{counter}</p>
+      </div>
+    );
+  }, [counter]);
 }
 
 export default List;
