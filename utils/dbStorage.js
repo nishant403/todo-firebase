@@ -16,7 +16,7 @@ function DBProvider(props) {
     });
   }, []);
 
-  function set(key, data) {
+  async function set(key, data) {
     if (storage.hasOwnProperty(key) == true) {
       return remove(key, data).then(() => {
         let storageCopy = Object.assign({}, storage);
@@ -34,7 +34,7 @@ function DBProvider(props) {
     return db.child(key).set(data);
   }
 
-  function update(key, data) {
+  async function update(key, data) {
     if (storage.hasOwnProperty(key) == false) {
       return set(key, data);
     }
@@ -56,7 +56,7 @@ function DBProvider(props) {
     }
   }
 
-  function remove(key) {
+  async function remove(key) {
     if (storage.hasOwnProperty(key)) {
       let storageCopy = Object.assign({}, storage);
       delete storageCopy[key];
