@@ -10,8 +10,8 @@ function DBProvider(props) {
   const [storage, setStorage] = useState({});
 
   useEffect(() => {
-    db.once("value", function(snapshot) {
-      setStorage(snapshot.val());
+    db.on("value", function(snapshot) {
+      snapshot.val() ? setStorage(snapshot.val()) : setStorage({});
       setLoaded(true);
     });
   }, []);
