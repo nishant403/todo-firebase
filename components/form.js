@@ -1,9 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext ,useEffect ,useMemo} from "react";
 import { DBContext } from "../utils/dbStorage";
 import styles from "../styles/Home.module.css";
 
 export default function Form() {
   const context = useContext(DBContext);
+
+  const textValue = context.get("text") ? context.get("text").value : "";
 
   function set() {
     context.set("counter", { value: 0 });
@@ -32,22 +34,29 @@ export default function Form() {
   }
 
   function custom() {
-    context.update("counter",{value2 : "20"});
+    context.update("counter", { value2: "20" });
   }
 
-  return (
-    <>
-      <h2>Form</h2>
+  function textChange(event) {
+    context.update("text",{value : event.target.value});
+  }
 
-      <div className={styles.grid}>
-        <button onClick={set}>Set Counter</button>
-        <button onClick={set2}>Set Counter2</button>
-        <button onClick={add}>Add +1 to Counter</button>
-        <button onClick={add2}>Add +1 to Counter2</button>
-        <button onClick={rem}>Remove Counter</button>
-        <button onClick={rem2}>Remove Counter2</button>
-        <button onClick={custom}>Add custom field in counter</button>
-      </div>
-    </>
-  );
+  return useMemo(() => {
+    return (
+      <>
+        <h2>Form</h2>
+        <div className={styles.grid}>
+          <p>Check realtime text editor </p>
+          <textarea name="" id="text" value={textValue} onChange={textChange} cols="100" rows="5"></textarea>
+          <button onClick={set}>Set Counter</button>
+          <button onClick={set2}>Set Counter2</button>
+          <button onClick={add}>Add +1 to Counter</button>
+          <button onClick={add2}>Add +1 to Counter2</button>
+          <button onClick={rem}>Remove Counter</button>
+          <button onClick={rem2}>Remove Counter2</button>
+          <button onClick={custom}>Add custom field in counter</button>
+        </div>
+      </>
+    )},
+  [textValue]);
 }
