@@ -3,6 +3,7 @@ import { DBContext } from "../utils/dbStorage";
 
 function List() {
   const context = useContext(DBContext);
+
   const counter = context.get("counter") ? context.get("counter").value : "";
 
   return useMemo(() => {

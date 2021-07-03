@@ -1,4 +1,4 @@
-import React, { useContext ,useEffect ,useMemo} from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import { DBContext } from "../utils/dbStorage";
 import styles from "../styles/Home.module.css";
 
@@ -16,13 +16,11 @@ export default function Form() {
   }
 
   function add() {
-    const currentVal = context.get("counter").value;
-    context.update("counter", { value: currentVal + 1 });
+    context.update("counter", { value: context.get("counter").value + 1 });
   }
 
   function add2() {
-    const currentVal = context.get("counter2").value;
-    context.update("counter2", { value: currentVal + 1 });
+    context.update("counter2", { value: context.get("counter2").value + 1 });
   }
 
   function rem() {
@@ -38,7 +36,7 @@ export default function Form() {
   }
 
   function textChange(event) {
-    context.update("text",{value : event.target.value});
+    context.update("text", { value: event.target.value });
   }
 
   return useMemo(() => {
@@ -47,7 +45,14 @@ export default function Form() {
         <h2>Form</h2>
         <div className={styles.grid}>
           <p>Check realtime text editor </p>
-          <textarea name="" id="text" value={textValue} onChange={textChange} cols="100" rows="5"></textarea>
+          <textarea
+            name=""
+            id="text"
+            value={textValue}
+            onChange={textChange}
+            cols="100"
+            rows="5"
+          ></textarea>
           <button onClick={set}>Set Counter</button>
           <button onClick={set2}>Set Counter2</button>
           <button onClick={add}>Add +1 to Counter</button>
@@ -57,6 +62,6 @@ export default function Form() {
           <button onClick={custom}>Add custom field in counter</button>
         </div>
       </>
-    )},
-  [textValue]);
+    );
+  }, [context]);
 }
