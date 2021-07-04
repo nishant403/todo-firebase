@@ -19,7 +19,7 @@ function List3() {
     },
     [counter],
     (prevDeps, nextDeps) => {
-      isEqual(prevDeps, nextDeps);
+      return isEqual(prevDeps, nextDeps);
     }
   );
 }

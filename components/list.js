@@ -12,14 +12,14 @@ function List() {
       for (let i = 0; i <= 10000000; i++) {}
       return (
         <div>
-          <h2>List3</h2>
+          <h2>List</h2>
           <p>{counter ? counter.value : ""}</p>
         </div>
       );
     },
     [counter],
     (prevDeps, nextDeps) => {
-      isEqual(prevDeps, nextDeps);
+      return isEqual(prevDeps, nextDeps);
     }
   );
 }
