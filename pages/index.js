@@ -1,20 +1,20 @@
 import { Component } from "react";
 import styles from "../styles/Home.module.css";
-import Form from "../components/form";
-import List from "../components/list";
-import List2 from "../components/list2";
-import List3 from "../components/list3";
+import Editor from "../components/editor";
+import Child1 from "../components/child1";
+import Child2 from "../components/child2";
+import Child3 from "../components/child3";
+import Buttons from "../components/buttons";
 
 export class index extends Component {
   render() {
     return (
       <div className={styles.container}>
-        <h1>To do List</h1>
-        <p>Add items below</p>
-        <Form />
-        <List />
-        <List2/>
-        <List3/>
+        <Editor />
+        <Child1 />
+        <Child2 />
+        <Child3 />
+        <Buttons />
       </div>
     );
   }

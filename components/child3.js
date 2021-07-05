@@ -3,7 +3,9 @@ import { DBContext } from "../utils/dbStorage";
 import { useCustomCompareMemo } from "use-custom-compare";
 import isEqual from "lodash/isEqual";
 
-function List3() {
+import { ListItem,ListItemLabel } from "baseui/list";
+
+function Child3() {
   const context = useContext(DBContext);
   const counter = context.get("counter2");
 
@@ -11,10 +13,13 @@ function List3() {
     () => {
       for (let i = 0; i <= 10000000; i++) {}
       return (
-        <div>
-          <h2>List3</h2>
-          <p>{counter ? counter.value : ""}</p>
-        </div>
+        <ListItem
+          endEnhancer={() => (
+            <ListItemLabel>Counter 2 in child 3</ListItemLabel>
+          )}
+        >
+          <ListItemLabel>{counter ? counter.value : ""}</ListItemLabel>
+        </ListItem>
       );
     },
     [counter],
@@ -24,4 +29,4 @@ function List3() {
   );
 }
 
-export default List3;
+export default Child3;
