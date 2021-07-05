@@ -1,6 +1,6 @@
 import "../styles/globals.css";
-import { DBProvider } from "../utils/dbStorage";
 
+import { DBProvider } from "../utils/dbStorage";
 import { BaseProvider, LightTheme } from "baseui";
 import { Provider as StyletronProvider } from "styletron-react";
 import { styletron } from "../styletron";

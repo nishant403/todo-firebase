@@ -1,5 +1,6 @@
 import firebase from "./firebase";
 import React, { useState, useEffect } from "react";
+import * as updateImmute from "immutability-helper";
 
 const db = firebase.ref("myList");
 
@@ -20,9 +21,8 @@ function DBProvider(props) {
         const key = snapshot.key;
         const data = snapshot.val();
 
-        let storageCopy = Object.assign({}, storage);
-        storageCopy[key] = data;
-
+        const storageCopy = updateImmute(storage, { [key] : { $set: data } });
+        // console.log("add", storage, key, data, storageCopy);
         return storageCopy;
       });
     });
@@ -31,10 +31,8 @@ function DBProvider(props) {
       setStorage(storage => {
         const key = snapshot.key;
         const data = snapshot.val();
-
-        let storageCopy = Object.assign({}, storage);
-        storageCopy[key] = data;
-
+        const storageCopy = updateImmute(storage, { [key] : { $set: data } });
+        // console.log("update", storage, key, data, storageCopy);
         return storageCopy;
       });
     });
@@ -42,10 +40,9 @@ function DBProvider(props) {
     db.on("child_removed", snapshot => {
       setStorage(storage => {
         const key = snapshot.key;
-
-        let storageCopy = Object.assign({}, storage);
-        delete storageCopy[key];
-        setStorage(storageCopy);
+        const storageCopy = updateImmute(storage, { $unset: [key] });
+        // console.log("remove", storage, key, storageCopy);
+        return storageCopy;
       });
     });
   }, []);
