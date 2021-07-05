@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useMemo } from "react";
 import { DBContext } from "../utils/dbStorage";
 
 import styles from "../styles/Home.module.css";
-import { Button, SIZE } from "baseui/button";
-import { ButtonGroup, SHAPE } from "baseui/button-group";
+import { Button } from "baseui/button";
+import { ButtonGroup } from "baseui/button-group";
 
-export default function Editor() {
+export default function Buttons() {
   const context = useContext(DBContext);
 
   function set1() {

@@ -8,7 +8,7 @@ function Child1() {
   const counter = context.get("counter1");
 
   return useMemo(() => {
-    for (let i = 0; i <= 10000000; i++) {}
+    // for (let i = 0; i <= 10000000; i++) {}
     return (
       <ListItem
         endEnhancer={() => <ListItemLabel>Counter 1 in child 1</ListItemLabel>}
