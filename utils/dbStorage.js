@@ -17,37 +17,66 @@ function DBProvider(props) {
     });
 
     db.on("child_added", snapshot => {
-      setStorage(storage => {
-        const key = snapshot.key;
-        const data = snapshot.val();
-
-        const storageCopy = updateImmute(storage, { [key] : { $set: data } });
-        // console.log("add", storage, key, data, storageCopy);
-        return storageCopy;
-      });
+      const key = snapshot.key;
+      const data = snapshot.val();
+      setLocal(key, data);
     });
 
     db.on("child_changed", snapshot => {
-      setStorage(storage => {
-        const key = snapshot.key;
-        const data = snapshot.val();
-        const storageCopy = updateImmute(storage, { [key] : { $set: data } });
-        // console.log("update", storage, key, data, storageCopy);
-        return storageCopy;
-      });
+      const key = snapshot.key;
+      const data = snapshot.val();
+      updateLocal(key, data);
     });
 
     db.on("child_removed", snapshot => {
-      setStorage(storage => {
-        const key = snapshot.key;
-        const storageCopy = updateImmute(storage, { $unset: [key] });
-        // console.log("remove", storage, key, storageCopy);
-        return storageCopy;
-      });
+      const key = snapshot.key;
+      removeLocal(key);
     });
   }, []);
 
+  function setLocal(key, data) {
+    setStorage(storage => {
+      if (
+        storage.hasOwnProperty(key) &&
+        storage[key].updateTime >= data.updateTime
+      ) {
+        return storage;
+      } else {
+        const storageCopy = updateImmute(storage, { [key]: { $set: data } });
+        console.log("add", storage, key, data, storageCopy);
+        return storageCopy;
+      }
+    });
+  }
+
+  function updateLocal(key, data) {
+    setStorage(storage => {
+      if (
+        storage.hasOwnProperty(key) &&
+        storage[key].updateTime >= data.updateTime
+      ) {
+        return storage;
+      } else {
+        const storageCopy = updateImmute(storage, { [key]: { $set: data } });
+        console.log("update", storage, key, data, storageCopy);
+        return storageCopy;
+      }
+    });
+  }
+
+  function removeLocal(key) {
+    if (storage.hasOwnProperty(key)) {
+      setStorage(storage => {
+        const storageCopy = updateImmute(storage, { $unset: [key] });
+        console.log("remove", storage, key, storageCopy);
+        return storageCopy;
+      });
+    }
+  }
+
   async function set(key, data) {
+    data.updateTime = Date.now();
+    setLocal(key, data);
     return db.child(key).set(data);
   }
 
@@ -55,6 +84,9 @@ function DBProvider(props) {
     if (storage.hasOwnProperty(key) == false) {
       return set(key, data);
     }
+
+    data.updateTime = Date.now();
+    updateLocal(key, data);
 
     return db.child(key).update(data);
   }
@@ -69,6 +101,7 @@ function DBProvider(props) {
 
   async function remove(key) {
     if (storage.hasOwnProperty(key)) {
+      removeLocal(key);
       return db.child(key).remove();
     }
   }
