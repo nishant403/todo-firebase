@@ -1,43 +1,44 @@
 import React, { useContext, useEffect, useMemo } from "react";
-import { DBContext } from "../utils/dbStorage";
+import { useDBHook } from "../utils/dbHook";
 
 import styles from "../styles/Home.module.css";
 import { Button } from "baseui/button";
 import { ButtonGroup } from "baseui/button-group";
 
 export default function Buttons() {
-  const context = useContext(DBContext);
+  const [counter1, counter1Actions] = useDBHook("counter1");
+  const [counter2, counter2Actions] = useDBHook("counter2");
 
   function set1() {
-    context.set("counter1", { value: 0 });
+    counter1Actions({ type: "set", payload: { value: 0 } });
   }
 
   function set2() {
-    context.set("counter2", { value: 0 });
+    counter2Actions({ type: "set", payload: { value: 0 } });
   }
 
   function add1() {
-    context.update("counter1", { value: context.get("counter1").value + 1 });
+    counter1Actions({ type: "update", payload: { value: counter1.value + 1 } });
   }
 
   function add2() {
-    context.update("counter2", { value: context.get("counter2").value + 1 });
+    counter2Actions({ type: "update", payload: { value: counter2.value + 1 } });
   }
 
   function rem1() {
-    context.remove("counter1");
+    counter1Actions({ type: "remove" });
   }
 
   function rem2() {
-    context.remove("counter2");
+    counter2Actions({ type: "remove" });
   }
 
   function custom1() {
-    context.update("counter1", { value2: "20" });
+    counter1Actions({ type: "update", payload: { value2: "20" } });
   }
 
   function custom2() {
-    context.update("counter2", { value2: "20" });
+    counter2Actions({ type: "update", payload: { value2: "20" } });
   }
 
   return (
